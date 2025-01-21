@@ -9,15 +9,32 @@ class TeacherModel(nn.Module):
     def __init__(self):
         super(TeacherModel, self).__init__()
         self.network = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size=3, padding=1),
+            nn.Conv2d(3, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),
+            nn.MaxPool2d(2, 2),  # Downsample to 16x16
+
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.Conv2d(256, 512, kernel_size=3, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),  # Downsample to 8x8
+
+            nn.Conv2d(512, 512, kernel_size=3, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),  # Downsample to 4x4
+
             nn.Flatten(),
-            nn.Linear(64 * 14 * 14, 256),
+            nn.Linear(512 * 4 * 4, 1024),
             nn.ReLU(),
-            nn.Linear(256, 10)
+            nn.Dropout(0.5),
+            nn.Linear(1024, 10)
         )
 
     def forward(self, x):
@@ -28,11 +45,11 @@ class StudentModel(nn.Module):
     def __init__(self):
         super(StudentModel, self).__init__()
         self.network = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=3, padding=1),
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
             nn.Flatten(),
-            nn.Linear(16 * 14 * 14, 64),
+            nn.Linear(32 * 16 * 16, 64),
             nn.ReLU(),
             nn.Linear(64, 10)
         )
@@ -88,8 +105,12 @@ def main():
 
     print("Loading data")
     # Data loading
-    transform = transforms.Compose([transforms.ToTensor()])
-    train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((32, 32)),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    ])
+    train_dataset = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
     print("Creating models")
