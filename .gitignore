@@ -1,4 +1,5 @@
 data/*
 *.pth
 __pycache__
-logs/*
+logs/error.out
+logs/standard.out
