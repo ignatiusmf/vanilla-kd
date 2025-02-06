@@ -69,7 +69,9 @@ def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha
 def train_model(model, train_loader, optimizer, criterion, device, epochs):
     model.train()
     for epoch in range(epochs):
+        print(epoch)
         for images, labels in train_loader:
+            print("yeet")
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
             loss = criterion(outputs, labels)
