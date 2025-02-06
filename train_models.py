@@ -1,3 +1,5 @@
+import time
+start_time = time.time()
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -143,3 +145,6 @@ def main():
 if __name__ == "__main__":
     print("Start")
     main()
+
+total_time = time.time - start_time
+print(f'{total_time=}')

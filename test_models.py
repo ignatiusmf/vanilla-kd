@@ -1,3 +1,5 @@
+import time
+start_time = time.time()
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -57,3 +59,6 @@ def main():
 if __name__ == "__main__":
     print("Start testing")
     main()
+
+total_time = time.time - start_time
+print(f'{total_time=}')
