@@ -71,7 +71,6 @@ def train_model(model, train_loader, optimizer, criterion, device, epochs):
     for epoch in range(epochs):
         print(epoch)
         for images, labels in train_loader:
-            print("yeet")
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
             loss = criterion(outputs, labels)
@@ -85,6 +84,7 @@ def train_kd(teacher_model, student_model, train_loader, optimizer, temperature,
     student_model.train()
     teacher_model.eval()
     for epoch in range(epochs):
+        print(epoch)
         for images, labels in train_loader:
             images, labels = images.to(device), labels.to(device)
             with torch.no_grad():
