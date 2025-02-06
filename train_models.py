@@ -146,5 +146,5 @@ if __name__ == "__main__":
     print("Start")
     main()
 
-total_time = time.time - start_time
+total_time = time.time() - start_time
 print(f'{total_time=}')
